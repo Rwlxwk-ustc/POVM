@@ -151,7 +151,7 @@ plt.close(legend_fig)
 # ==========================================
 # 3. 核心计算与主图表渲染
 # ==========================================
-st.title("量子探测器 POVM 层析与 FI 计算仪表盘")
+st.title("Quantum Detector Tomography by POVM")
 
 if not submit_btn:
     st.info("在左侧侧边栏调整参数后点击 **【开始计算】** 生成数据和图表。")
