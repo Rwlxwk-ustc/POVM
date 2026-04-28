@@ -13,10 +13,10 @@ import math
 # ==========================================
 # 0. 页面配置与字体处理
 # ==========================================
-st.set_page_config(page_title="POVM & FI 交互计算平台", layout="wide")
+st.set_page_config(page_title="POVM & FI Dashboard", layout="wide")
 warnings.filterwarnings("ignore", category=RuntimeWarning, message=".*matmul.*")
 
-# 兼容 Mac/Windows 字体（注意：Streamlit Cloud 环境下若无此字体可能会显示方块）
+# 兼容 Mac/Windows 字体（解决中文乱码）
 plt.rcParams['font.sans-serif'] = ['PingFang SC', 'Arial Unicode MS', 'SimHei', 'Microsoft YaHei', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
 
@@ -88,18 +88,14 @@ def solve_povm(F_mat, P_exp, N_out, M_len, gamma=0.5):
 # 2. UI 侧边栏构建
 # ==========================================
 st.sidebar.markdown("### ⚙️ 参数控制")
-st.sidebar.info("💡 提示：你可以直接点击滑块右侧的数字，手动输入精确数值。")
-
 with st.sidebar.form("param_form"):
     eta = st.slider("效率 (η)", min_value=0.1, max_value=1.0, value=0.75, step=0.05)
     sigma_el = st.slider("噪声 (σ_el)", min_value=0.1, max_value=3.0, value=1.2, step=0.1)
-    M_max = st.slider("截断 (M)", min_value=50, max_value=150, value=110, step=1)
-    
+    M_max = st.slider("截断光子数 (M)", min_value=50, max_value=150, value=110, step=1)
     st.divider()
     alpha_0 = st.slider("探针起点", min_value=0.1, max_value=5.0, value=1.0, step=0.1)
     alpha_max = st.slider("探针最大", min_value=5.0, max_value=15.0, value=9.0, step=0.5)
     N_alpha = st.slider("探针数量", min_value=5, max_value=30, value=16, step=1)
-    
     st.divider()
     N_pc = st.slider("PC 通道", min_value=2, max_value=32, value=12, step=1)
     N_pd = st.slider("PD 划分", min_value=2, max_value=32, value=18, step=1)
@@ -115,7 +111,7 @@ c_pd = plt.cm.plasma(np.linspace(0, 0.9, N_pd))
 c_dir_pc, c_dir_pd, c_bhd_pc, c_bhd_pd = '#FF8C00', '#DC143C', '#00BFFF', '#0000CD'
 bg_dir, bg_bhd = '#E8F5E9', '#F3E5F5'
 
-legend_fig = plt.figure(figsize=(3, 4.5), dpi=100)
+legend_fig = plt.figure(figsize=(2, 4.5), dpi=100)
 legend_fig.patch.set_facecolor('#F8F9FA') 
 gs_leg = legend_fig.add_gridspec(3, 1, height_ratios=[0.15, 0.15, 1], hspace=0.6)
 ax_cb1 = legend_fig.add_subplot(gs_leg[0])
@@ -125,14 +121,14 @@ ax_fi_leg = legend_fig.add_subplot(gs_leg[2])
 cmap_pc = mpl.colors.ListedColormap(c_pc)
 norm_pc = mpl.colors.Normalize(vmin=-0.5, vmax=N_pc-0.5)
 cb1 = mpl.colorbar.ColorbarBase(ax_cb1, cmap=cmap_pc, norm=norm_pc, orientation='horizontal')
-cb1.ax.set_title("Row 1 - CH PC", fontsize=9, fontweight='bold')
+cb1.ax.set_title("Row 1 - PC Channel", fontsize=9, fontweight='bold')
 cb1.set_ticks([0, N_pc//2, N_pc-1])
 cb1.ax.tick_params(labelsize=8)
 
 cmap_pd = mpl.colors.ListedColormap(c_pd)
 norm_pd = mpl.colors.Normalize(vmin=-0.5, vmax=N_pd-0.5)
 cb2 = mpl.colorbar.ColorbarBase(ax_cb2, cmap=cmap_pd, norm=norm_pd, orientation='horizontal')
-cb2.ax.set_title("Row 1 - CH PD", fontsize=9, fontweight='bold')
+cb2.ax.set_title("Row 1 - PD Channel", fontsize=9, fontweight='bold')
 cb2.set_ticks([0, N_pd//2, N_pd-1])
 cb2.ax.tick_params(labelsize=8)
 
@@ -305,11 +301,7 @@ else:
         for n in range(N_pc):
             for k in range(M_max + 1):
                 if theta_pc_rec[n, k] > 1e-3:
-                    x.append(k)
-                    y.append(n)
-                    z.append(0)
-                    dz.append(theta_pc_rec[n, k])
-                    cols.append(c_pc[n])
+                    x.append(k); y.append(n); z.append(0); dz.append(theta_pc_rec[n, k]); cols.append(c_pc[n])
         ax4.bar3d(x, y, z, 0.8, 0.8, dz, color=cols, alpha=0.8)
         ax4.set_title("PC POVM (3D)", fontsize=10)
         ax4.tick_params(labelsize=7)
@@ -324,11 +316,7 @@ else:
         for j in range(N_pd):
             for k in range(M_max + 1):
                 if theta_pd_rec[j, k] > 1e-3:
-                    x.append(k)
-                    y.append(j)
-                    z.append(0)
-                    dz.append(theta_pd_rec[j, k])
-                    cols.append(c_pd[j])
+                    x.append(k); y.append(j); z.append(0); dz.append(theta_pd_rec[j, k]); cols.append(c_pd[j])
         ax6.bar3d(x, y, z, 0.8, 0.8, dz, color=cols, alpha=0.8)
         ax6.set_title("PD POVM (3D)", fontsize=10)
         ax6.tick_params(labelsize=7)
