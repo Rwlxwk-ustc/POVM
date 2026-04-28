@@ -151,10 +151,10 @@ plt.close(legend_fig)
 # ==========================================
 # 3. 核心计算与主图表渲染
 # ==========================================
-st.title("量子探测器 POVM 层析与 FI 计算仪表盘")
+st.title("POVM Calculate")
 
 if not submit_btn:
-    st.info("👈 请在左侧侧边栏调整参数，然后点击 **【🚀 开始计算】** 生成数据和图表。")
+    st.info("Created by Lzy")
 else:
     with st.spinner("🔄 正在进行矩阵推导与凸优化求解...这可能需要几秒钟..."):
         # --- 准备数据 ---
