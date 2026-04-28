@@ -90,7 +90,7 @@ def solve_povm(F_mat, P_exp, N_out, M_len, gamma=0.5):
 st.sidebar.markdown("### ⚙️ 参数控制")
 with st.sidebar.form("param_form"):
     eta = st.slider("效率 (η)", min_value=0.1, max_value=1.0, value=0.75, step=0.05)
-    sigma_el = st.slider("噪声 (σ_el)", min_value=0.1, max_value=3.0, value=1.2, step=0.1)
+    sigma_el = st.slider("电学噪声带宽 (σ_el)", min_value=0.1, max_value=3.0, value=1.2, step=0.1)
     M_max = st.slider("截断光子数 (M)", min_value=50, max_value=150, value=110, step=1)
     st.divider()
     alpha_0 = st.slider("探针起点", min_value=0.1, max_value=5.0, value=1.0, step=0.1)
@@ -100,7 +100,7 @@ with st.sidebar.form("param_form"):
     N_pc = st.slider("PC 通道", min_value=2, max_value=32, value=12, step=1)
     N_pd = st.slider("PD 划分", min_value=2, max_value=32, value=18, step=1)
     
-    submit_btn = st.form_submit_button("🚀 开始计算", use_container_width=True)
+    submit_btn = st.form_submit_button("开始计算", use_container_width=True)
 
 # 渲染全局图例 (独立于计算之外，常驻侧边栏下方)
 st.sidebar.divider()
@@ -154,7 +154,7 @@ plt.close(legend_fig)
 st.title("量子探测器 POVM 层析与 FI 计算仪表盘")
 
 if not submit_btn:
-    st.info("👈 请在左侧侧边栏调整参数，然后点击 **【🚀 开始计算】** 生成数据和图表。")
+    st.info("在左侧侧边栏调整参数后点击 **【开始计算】** 生成数据和图表。")
 else:
     with st.spinner("🔄 正在进行矩阵推导与凸优化求解...这可能需要几秒钟..."):
         # --- 准备数据 ---
